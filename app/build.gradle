@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlinx.kover'
     id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
     id 'com.google.devtools.ksp' version '1.8.0-1.0.8'
 }
 
@@ -50,19 +51,23 @@ android {
 }
 
 dependencies {
-    def room_version = "2.5.0"
+    def room_version = "2.5.1"
+    def hilt_version = "2.45"
     def retrofit_version = "2.9.0"
 
+    // Room
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-
     // To use Kotlin annotation processing tool (kapt)
     kapt "androidx.room:room-compiler:$room_version"
     // To use Kotlin Symbol Processing (KSP)
     ksp "androidx.room:room-compiler:$room_version"
-
     // Paging 3 Integration
     implementation "androidx.room:room-paging:$room_version"
+
+    // Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     // Retrofit 2
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
