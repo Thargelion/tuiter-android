@@ -1,4 +1,4 @@
-package ar.com.depietro.tuiter
+package ar.com.depietro.tuiter.ui.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
