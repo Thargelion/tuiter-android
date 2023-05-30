@@ -1,4 +1,4 @@
-package ar.com.depietro.tuiter.data.post.di.model
+package ar.com.depietro.tuiter.data.post.model
 
 data class Post (
     val id: Int = 0,
