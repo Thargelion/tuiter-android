@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginUser(modifier: Modifier = Modifier) {
+fun LoginUser(onClickAction: (username: String) -> Unit, modifier: Modifier = Modifier) {
     val paddingModifier = Modifier.padding(10.dp)
     var text by remember { mutableStateOf(TextFieldValue("")) }
     Card(modifier = paddingModifier) {
@@ -38,7 +38,7 @@ fun LoginUser(modifier: Modifier = Modifier) {
             )
             Row(modifier = paddingModifier.align(alignment = Alignment.End)) {
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { onClickAction(text.text) },
                     content = { Text(text = "Access") }
                 )
             }
@@ -49,5 +49,5 @@ fun LoginUser(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 private fun LoginPreview() {
-    LoginUser()
+    LoginUser(({ dummy -> dummy }))
 }

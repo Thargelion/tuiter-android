@@ -1,4 +1,4 @@
-package ar.com.depietro.tuiter.data.user.local.entities
+package ar.com.depietro.tuiter.data.user.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -8,7 +8,7 @@ import ar.com.depietro.tuiter.data.user.model.User
 @Entity(tableName = "users")
 data class UserEntity(
     @PrimaryKey
-    val id: String,
+    val id: Int,
     val userName: String,
     @ColumnInfo(name = "avatar_url")
     val avatarUrl: String

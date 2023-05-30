@@ -2,7 +2,7 @@ package ar.com.depietro.tuiter.data.user.model
 
 
 data class User(
-    val id: String,
+    val id: Int = 0,
     val userName: String,
-    val avatarUrl: String
+    val avatarUrl: String = ""
 )
