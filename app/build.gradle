@@ -51,6 +51,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.core:core-ktx:+'
     def room_version = "2.5.1"
     def hilt_version = "2.45"
     def retrofit_version = "2.9.0"
