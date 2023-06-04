@@ -5,12 +5,11 @@ import androidx.lifecycle.viewModelScope
 import ar.com.depietro.tuiter.core.asResult
 import ar.com.depietro.tuiter.core.Result
 import ar.com.depietro.tuiter.data.preference.PreferenceRepository
-import ar.com.depietro.tuiter.data.user.UserRepository
+import ar.com.depietro.tuiter.data.user.repository.UserRepository
 import ar.com.depietro.tuiter.data.user.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

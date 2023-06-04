@@ -16,7 +16,7 @@ fun User.asCreateDTO() = UserCreateDTO(
     userName = userName
 )
 
-data class UserNetworkDTO(
+data class UserDTO(
     @SerializedName("id")
     val userId: Int,
     @SerializedName("name")
@@ -25,7 +25,7 @@ data class UserNetworkDTO(
     val avatarUrl: String
 )
 
-fun UserNetworkDTO.asModel() = User(
+fun UserDTO.asModel() = User(
     id = userId,
     userName = userName,
     avatarUrl = avatarUrl

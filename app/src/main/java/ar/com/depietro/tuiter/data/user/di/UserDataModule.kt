@@ -1,9 +1,9 @@
 package ar.com.depietro.tuiter.data.user.di
 
-import ar.com.depietro.tuiter.data.user.UserDefaultRepository
-import ar.com.depietro.tuiter.data.user.UserRepository
-import ar.com.depietro.tuiter.data.user.network.TuiterHTTP
-import ar.com.depietro.tuiter.data.user.network.TuiterHTTPClient
+import ar.com.depietro.tuiter.data.user.repository.UserDefaultRepository
+import ar.com.depietro.tuiter.data.user.repository.UserRepository
+import ar.com.depietro.tuiter.data.user.network.UserHTTP
+import ar.com.depietro.tuiter.data.user.network.UserHTTPClient
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,5 +17,5 @@ abstract class UserDataModule {
     abstract fun bindUserRepository(userRepositoryImpl: UserDefaultRepository): UserRepository
 
     @Binds
-    abstract fun bindTuiterCLient(tuiterHTTPClient: TuiterHTTPClient): TuiterHTTP
+    abstract fun bindUserHTTPClient(tuiterHTTPClient: UserHTTPClient): UserHTTP
 }

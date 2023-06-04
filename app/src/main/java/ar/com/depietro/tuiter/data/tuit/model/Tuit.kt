@@ -1,6 +1,6 @@
-package ar.com.depietro.tuiter.data.post.model
+package ar.com.depietro.tuiter.data.tuit.model
 
-data class Post(
+data class Tuit(
     val id: Int = 0,
     val message: String = "",
     val author_id: String = "",

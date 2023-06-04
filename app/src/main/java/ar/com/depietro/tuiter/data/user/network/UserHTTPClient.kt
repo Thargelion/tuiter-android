@@ -6,14 +6,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class TuiterHTTPClient @Inject constructor(private val http: TuiterAPI) : TuiterHTTP {
-    override fun getUserById(id: Int): Flow<UserNetworkDTO> {
+class UserHTTPClient @Inject constructor(private val http: UserAPI) : UserHTTP {
+    override fun getUserById(id: Int): Flow<UserDTO> {
         return flow {
             emit(http.getUserById(id))
         }
     }
 
-    override fun createUser(user: UserCreateDTO): Flow<UserNetworkDTO> {
+    override fun createUser(user: UserCreateDTO): Flow<UserDTO> {
         return flow {
             emit(http.createUser(user))
         }.catch { e ->
