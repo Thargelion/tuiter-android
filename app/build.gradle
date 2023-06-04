@@ -76,8 +76,11 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
-    implementation 'androidx.core:core-ktx:1.10.1'
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
     // For Kotlin
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
     implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
