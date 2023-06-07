@@ -6,4 +6,6 @@ interface TuitHTTP {
     fun getTuitById(id: Int): Flow<TuitDTO>
     fun createTuit(tuit: TuitCreateDTO): Flow<TuitDTO>
     fun listPageTuits(page: Int): Flow<List<TuitDTO>>
+
+    fun listPageUserTuits(userId: Int, page: Int): Flow<List<UserTuitDTO>>
 }

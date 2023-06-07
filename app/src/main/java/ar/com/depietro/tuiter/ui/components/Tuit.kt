@@ -27,18 +27,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 
-data class TuitData(
-    val id: Int = 0,
-    val message: String = "",
-    val author_name: String = "",
-    val avatarUrl: String = "",
-    val isLiked: Boolean = false,
-    val date: String = "",
-    val likeAction: (id: Int) -> Unit,
+data class TuitViewData(
+    val Id: Int = 0,
+    val Message: String = "",
+    val AuthorName: String = "",
+    val AvatarUrl: String = "",
+    val Liked: Boolean = false,
+    val Likes: Int = 0,
+    val Date: String = "",
 )
 
 @Composable
-fun Tuit(tuitData: TuitData) {
+fun Tuit(tuitData: TuitViewData, likeAction: (id: Int) -> Unit) {
     // Thanks https://www.develou.com/cards-en-jetpack-compose/
     val paddingModifier = Modifier.padding(8.dp)
     Card {
@@ -55,14 +55,14 @@ fun Tuit(tuitData: TuitData) {
                         .size(40.dp)
                 ) {
                     AsyncImage(
-                        model = tuitData.avatarUrl,
+                        model = tuitData.AvatarUrl,
                         contentDescription = "avatar",
                     )
                 }
                 Column(Modifier.fillMaxWidth()) {
                     Column {
                         Text(
-                            text = tuitData.author_name,
+                            text = tuitData.AuthorName,
                             style = MaterialTheme.typography.headlineMedium
                         )
                     }
@@ -77,13 +77,13 @@ fun Tuit(tuitData: TuitData) {
                     Column {
                         Row {
                             Text(
-                                text = tuitData.message,
+                                text = tuitData.Message,
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
                         Row {
                             Text(
-                                text = tuitData.date,
+                                text = tuitData.Date,
                                 style = TextStyle(color = Color.Gray, fontSize = 10.sp),
                                 modifier = Modifier.padding(top = 8.dp)
                             )
@@ -92,12 +92,17 @@ fun Tuit(tuitData: TuitData) {
                 }
             }
             Row {
-                IconButton(onClick = { tuitData.likeAction(tuitData.id) }) {
-                    if (tuitData.isLiked) {
+                IconButton(onClick = { likeAction(tuitData.Id) }) {
+                    if (tuitData.Liked) {
                         Icon(Icons.Default.Favorite, contentDescription = "Like")
                     } else {
                         Icon(Icons.Default.FavoriteBorder, contentDescription = "Like")
                     }
+                }
+                Box(modifier = paddingModifier.align(alignment = Alignment.CenterVertically)) {
+                    Text(
+                        text = tuitData.Likes.toString()
+                    )
                 }
             }
         }
@@ -107,15 +112,15 @@ fun Tuit(tuitData: TuitData) {
 @Preview
 @Composable
 fun TuitPreview() {
-    Tuit(TuitData(
-        id = 1,
-        message = "Hola soy un mensaje escrito por un usuario y tengo un montón" +
+    Tuit(TuitViewData(
+        Id = 1,
+        Message = "Hola soy un mensaje escrito por un usuario y tengo un montón" +
                 " de texto para mostraraaaaaa aaaaaaaa aaaaaaaaaaaaa aaaaaa aaaaaaaaaa" +
                 "aaaaaaaaaaaaa aaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa",
-        avatarUrl = "https://ui-avatars.com/api/?background=random&name=John+Doe",
-        author_name = "Jorge",
-        date = "5 de Mayo de 2021",
-        isLiked = false,
-        likeAction = { id -> println(id) }
-    ))
+        AvatarUrl = "https://ui-avatars.com/api/?background=random&name=John+Doe",
+        AuthorName = "Jorge",
+        Date = "5 de Mayo de 2021",
+        Liked = false,
+        Likes = 0,
+    ), likeAction = { id -> println(id) })
 }

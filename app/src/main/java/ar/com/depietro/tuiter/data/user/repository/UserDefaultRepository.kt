@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class UserDefaultRepository @Inject constructor(
     userDatabase: TuiterDatabase,
-    private val tuiterHTTP: UserHTTP
+    private val userHTTP: UserHTTP
 ) : UserRepository {
     private val userDAO: UserDAO = userDatabase.userDao()
 
@@ -25,7 +25,7 @@ class UserDefaultRepository @Inject constructor(
             userDAO.findById(userId)
                 .map { it.asModel() }
                 .catch {
-                    tuiterHTTP.getUserById(userId)
+                    userHTTP.getUserById(userId)
                         .map { it.asModel() }
                         .collect {
                             emit(it)
@@ -35,7 +35,7 @@ class UserDefaultRepository @Inject constructor(
                     emit(it)
                 }
 
-            tuiterHTTP.getUserById(userId)
+            userHTTP.getUserById(userId)
                 .map { it.asModel() }
                 .collect {
                     emit(it)
@@ -45,6 +45,6 @@ class UserDefaultRepository @Inject constructor(
     }
 
     override fun create(user: User): Flow<User> {
-        return tuiterHTTP.createUser(user.asCreateDTO()).map { it.asModel() }
+        return userHTTP.createUser(user.asCreateDTO()).map { it.asModel() }
     }
 }

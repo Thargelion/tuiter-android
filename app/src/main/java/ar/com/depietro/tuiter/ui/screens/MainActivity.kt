@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ar.com.depietro.tuiter.ui.components.LoginUser
+import ar.com.depietro.tuiter.ui.components.TuitFeed
 import ar.com.depietro.tuiter.ui.theme.TuiterTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
-        val userState: MainViewUIState by mainViewModel.userState.collectAsState()
+        val uiState: MainViewUIState by mainViewModel.uiState.collectAsState()
         val scope = rememberCoroutineScope()
         val snackbarHostState = remember { SnackbarHostState() }
         TuiterTheme {
@@ -55,7 +56,7 @@ class MainActivity : ComponentActivity() {
                         .padding(contentPadding),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    when (val userState = userState.userState) {
+                    when (val userState = uiState.userState) {
                         is UserUIState.Error -> {
                             Box {
                                 LoginUser(
@@ -83,15 +84,35 @@ class MainActivity : ComponentActivity() {
                         }
 
                         is UserUIState.Success -> {
-                            LaunchedEffect(snackbarHostState) {
-                                // Show snackbar using a coroutine, when the coroutine is cancelled the
-                                // snackbar will automatically dismiss. This coroutine will cancel whenever
-                                // `state.hasError` is false, and only start when `state.hasError` is true
-                                // (due to the above if-check), or if `scaffoldState.snackbarHostState` changes.
-                                snackbarHostState.showSnackbar(
-                                    message = userState.user.userName,
-                                    actionLabel = "Retry message"
-                                )
+                            when (val tuitFeedState = uiState.tuitListState) {
+                                is TuitFeedUIState.Error -> {
+                                    LaunchedEffect(snackbarHostState) {
+                                        // Show snackbar using a coroutine, when the coroutine is cancelled the
+                                        // snackbar will automatically dismiss. This coroutine will cancel whenever
+                                        // `state.hasError` is false, and only start when `state.hasError` is true
+                                        // (due to the above if-check), or if `scaffoldState.snackbarHostState` changes.
+                                        snackbarHostState.showSnackbar(
+                                            message = tuitFeedState.message,
+                                            actionLabel = "Retry message"
+                                        )
+                                    }
+                                }
+
+                                TuitFeedUIState.Loading -> {
+                                    LoadingIndicator()
+                                }
+
+                                is TuitFeedUIState.Success -> {
+                                    TuitFeed(
+                                        tuitList = tuitFeedState.tuits,
+                                        loadMore = {
+                                            mainViewModel.fetchTuitList(1)
+                                        },
+                                        likeAction = { id ->
+                                            mainViewModel.likeTuit(id)
+                                        }
+                                    )
+                                }
                             }
                         }
                     }

@@ -17,4 +17,11 @@ interface TuitAPI {
     @POST
     suspend fun createTuit(@Body tuit: TuitCreateDTO): TuitDTO
 
+    @GET("users/{userId}/tuits")
+    suspend fun listPageUserTuits(
+        @Path("userId") userId: Int,
+        @Query("page") page: Int
+    ): List<UserTuitDTO>
+
+
 }
