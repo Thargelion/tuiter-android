@@ -1,11 +1,11 @@
 package ar.com.depietro.tuiter.data.tuit.model
 
 data class UserTuit(
-    val Id: Int = 0,
-    val AvatarUrl: String = "",
-    val Message: String = "",
-    val Author: String = "",
-    val Date: String = "",
-    val Liked: Boolean = false,
-    val Likes: Int = 0
+    val id: Int = 0,
+    val avatarUrl: String = "",
+    val message: String = "",
+    val author: String = "",
+    val date: String = "",
+    val liked: Boolean = false,
+    val likes: Int = 0
 )

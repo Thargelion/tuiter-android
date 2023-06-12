@@ -28,20 +28,20 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 
 data class TuitViewData(
-    val Id: Int = 0,
-    val Message: String = "",
-    val AuthorName: String = "",
-    val AvatarUrl: String = "",
-    val Liked: Boolean = false,
-    val Likes: Int = 0,
+    val id: Int = 0,
+    val message: String = "",
+    val authorName: String = "",
+    val avatarUrl: String = "",
+    val liked: Boolean = false,
+    val likes: Int = 0,
     val Date: String = "",
 )
 
 @Composable
-fun Tuit(tuitData: TuitViewData, likeAction: (id: Int) -> Unit) {
+fun Tuit(tuitData: TuitViewData, likeAction: (id: Int) -> Unit, modifier: Modifier = Modifier) {
     // Thanks https://www.develou.com/cards-en-jetpack-compose/
     val paddingModifier = Modifier.padding(8.dp)
-    Card {
+    Card(modifier = modifier) {
         Column() {
             Row(
                 Modifier
@@ -55,14 +55,14 @@ fun Tuit(tuitData: TuitViewData, likeAction: (id: Int) -> Unit) {
                         .size(40.dp)
                 ) {
                     AsyncImage(
-                        model = tuitData.AvatarUrl,
+                        model = tuitData.avatarUrl,
                         contentDescription = "avatar",
                     )
                 }
                 Column(Modifier.fillMaxWidth()) {
                     Column {
                         Text(
-                            text = tuitData.AuthorName,
+                            text = tuitData.authorName,
                             style = MaterialTheme.typography.headlineMedium
                         )
                     }
@@ -77,7 +77,7 @@ fun Tuit(tuitData: TuitViewData, likeAction: (id: Int) -> Unit) {
                     Column {
                         Row {
                             Text(
-                                text = tuitData.Message,
+                                text = tuitData.message,
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -92,8 +92,8 @@ fun Tuit(tuitData: TuitViewData, likeAction: (id: Int) -> Unit) {
                 }
             }
             Row {
-                IconButton(onClick = { likeAction(tuitData.Id) }) {
-                    if (tuitData.Liked) {
+                IconButton(onClick = { likeAction(tuitData.id) }) {
+                    if (tuitData.liked) {
                         Icon(Icons.Default.Favorite, contentDescription = "Like")
                     } else {
                         Icon(Icons.Default.FavoriteBorder, contentDescription = "Like")
@@ -101,7 +101,7 @@ fun Tuit(tuitData: TuitViewData, likeAction: (id: Int) -> Unit) {
                 }
                 Box(modifier = paddingModifier.align(alignment = Alignment.CenterVertically)) {
                     Text(
-                        text = tuitData.Likes.toString()
+                        text = tuitData.likes.toString()
                     )
                 }
             }
@@ -113,14 +113,14 @@ fun Tuit(tuitData: TuitViewData, likeAction: (id: Int) -> Unit) {
 @Composable
 fun TuitPreview() {
     Tuit(TuitViewData(
-        Id = 1,
-        Message = "Hola soy un mensaje escrito por un usuario y tengo un montón" +
+        id = 1,
+        message = "Hola soy un mensaje escrito por un usuario y tengo un montón" +
                 " de texto para mostraraaaaaa aaaaaaaa aaaaaaaaaaaaa aaaaaa aaaaaaaaaa" +
                 "aaaaaaaaaaaaa aaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa",
-        AvatarUrl = "https://ui-avatars.com/api/?background=random&name=John+Doe",
-        AuthorName = "Jorge",
+        avatarUrl = "https://ui-avatars.com/api/?background=random&name=John+Doe",
+        authorName = "Jorge",
         Date = "5 de Mayo de 2021",
-        Liked = false,
-        Likes = 0,
+        liked = false,
+        likes = 0,
     ), likeAction = { id -> println(id) })
 }

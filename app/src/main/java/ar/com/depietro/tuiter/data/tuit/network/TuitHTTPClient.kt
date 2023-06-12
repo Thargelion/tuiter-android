@@ -23,9 +23,7 @@ class TuitHTTPClient @Inject constructor(private val http: TuitAPI) : TuitHTTP {
         }
     }
 
-    override fun listPageUserTuits(userId: Int, page: Int): Flow<List<UserTuitDTO>> {
-        return flow {
-            emit(http.listPageUserTuits(userId, page))
-        }
+    override suspend fun listPageUserTuits(userId: Int, page: Int): List<UserTuitDTO> {
+        return http.listPageUserTuits(userId, page)
     }
 }

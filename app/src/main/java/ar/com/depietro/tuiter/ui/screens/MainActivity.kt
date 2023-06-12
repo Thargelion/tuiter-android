@@ -16,6 +16,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import ar.com.depietro.tuiter.ui.components.LoginUser
 import ar.com.depietro.tuiter.ui.components.TuitFeed
 import ar.com.depietro.tuiter.ui.theme.TuiterTheme
@@ -80,41 +82,25 @@ class MainActivity : ComponentActivity() {
                         }
 
                         UserUIState.Loading -> {
-                            LoadingIndicator()
+                            LaunchedEffect(snackbarHostState) {
+                                // Show snackbar using a coroutine, when the coroutine is cancelled the
+                                // snackbar will automatically dismiss. This coroutine will cancel whenever
+                                // `state.hasError` is false, and only start when `state.hasError` is true
+                                // (due to the above if-check), or if `scaffoldState.snackbarHostState` changes.
+                                snackbarHostState.showSnackbar(
+                                    message = "Loading",
+                                )
+                            }
                         }
 
                         is UserUIState.Success -> {
-                            when (val tuitFeedState = uiState.tuitListState) {
-                                is TuitFeedUIState.Error -> {
-                                    LaunchedEffect(snackbarHostState) {
-                                        // Show snackbar using a coroutine, when the coroutine is cancelled the
-                                        // snackbar will automatically dismiss. This coroutine will cancel whenever
-                                        // `state.hasError` is false, and only start when `state.hasError` is true
-                                        // (due to the above if-check), or if `scaffoldState.snackbarHostState` changes.
-                                        snackbarHostState.showSnackbar(
-                                            message = tuitFeedState.message,
-                                            actionLabel = "Retry message"
-                                        )
-                                    }
-                                }
-
-                                TuitFeedUIState.Loading -> {
-                                    LoadingIndicator()
-                                }
-
-                                is TuitFeedUIState.Success -> {
-                                    TuitFeed(
-                                        tuitList = tuitFeedState.tuits,
-                                        loadMore = {
-                                            mainViewModel.fetchTuitList(1)
-                                        },
-                                        likeAction = { id ->
-                                            mainViewModel.likeTuit(id)
-                                        }
-                                    )
-                                }
-                            }
+                            TuitFeed(
+                                tuitList = mainViewModel.getUserPosts().collectAsLazyPagingItems(),
+                                likeAction = mainViewModel::likeTuit,
+                                listState = mainViewModel.listState,
+                            )
                         }
+
                     }
                 }
             }

@@ -6,28 +6,28 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
 
+// https://manavtamboli.medium.com/infinite-list-paged-list-in-jetpack-compose-b10fc7e74768
 @Composable
-fun InfiniteList(
-    listState: LazyListState,
+fun LazyListState.OnBottomReached(
     buffer: Int = 2,
     onLoadMore: () -> Unit
 ) {
-    val loadMore = remember {
+    val shouldLoadMore = remember {
         derivedStateOf {
-            val layoutInfo = listState.layoutInfo
-            val totalItemsNumber = layoutInfo.totalItemsCount
-            val lastVisibleItemIndex = (layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0) + 1
+            val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()
+                ?: return@derivedStateOf true
 
-            lastVisibleItemIndex > (totalItemsNumber - buffer)
+            // subtract buffer from the total items
+            lastVisibleItem.index >= layoutInfo.totalItemsCount - 1 - buffer
         }
     }
-    LaunchedEffect(loadMore) {
-        snapshotFlow { loadMore.value }
-            .distinctUntilChanged()
+    LaunchedEffect(shouldLoadMore) {
+        snapshotFlow { shouldLoadMore.value }
             .collect {
-                onLoadMore()
+                if (it){
+                    onLoadMore()
+                }
             }
     }
 

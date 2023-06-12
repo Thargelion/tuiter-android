@@ -13,13 +13,19 @@ class UserHTTPClient @Inject constructor(private val http: UserAPI) : UserHTTP {
         }
     }
 
+    override fun getUserByName(name: String): Flow<UserDTO> {
+        return flow {
+            emit(http.getUsers(name).first())
+        }
+    }
+
     override fun createUser(user: UserCreateDTO): Flow<UserDTO> {
         return flow {
-            emit(http.createUser(user))
-        }.catch { e ->
-            Log.e("TUITER_CLIENT", e.message ?: "Error creating user")
-            Log.d("TUITER_CLIENT", user.toString())
-            throw Exception("Error creating user")
+            getUserByName(user.userName).catch {
+                emit(http.createUser(user))
+            }.collect {
+                emit(it)
+            }
         }
     }
 }

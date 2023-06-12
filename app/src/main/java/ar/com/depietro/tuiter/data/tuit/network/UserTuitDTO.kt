@@ -1,5 +1,7 @@
 package ar.com.depietro.tuiter.data.tuit.network
 
+import ar.com.depietro.tuiter.data.tuit.model.UserTuit
+
 
 data class UserTuitDTO(
     val id: Int = 0,
@@ -9,4 +11,14 @@ data class UserTuitDTO(
     val date: String = "",
     val liked: Boolean = false,
     val likes: Int = 0
+)
+
+fun UserTuitDTO.asModel() = UserTuit(
+    id = id,
+    avatarUrl = avatarUrl,
+    message = message,
+    author = author,
+    date = date,
+    liked = liked,
+    likes = likes
 )
