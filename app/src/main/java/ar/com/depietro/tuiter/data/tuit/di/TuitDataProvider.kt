@@ -1,6 +1,6 @@
-package ar.com.depietro.tuiter.data.user.di
+package ar.com.depietro.tuiter.data.tuit.di
 
-import ar.com.depietro.tuiter.data.user.network.UserAPI
+import ar.com.depietro.tuiter.data.tuit.network.TuitAPI
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -12,15 +12,16 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object UserDataProvider {
+object TuitDataProvider {
+
     @Provides
     @Singleton
-    fun provideUserAPI(gson: Gson): UserAPI {
+    fun provideTuitAPI(gson: Gson): TuitAPI {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl("http://10.0.2.2:3000/v1/")
             .build()
-            .create(UserAPI::class.java)
+            .create(TuitAPI::class.java)
     }
 
 }

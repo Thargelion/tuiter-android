@@ -1,4 +1,4 @@
-package ar.com.depietro.tuiter.data.user
+package ar.com.depietro.tuiter.data.user.repository
 
 import ar.com.depietro.tuiter.data.user.model.User
 import kotlinx.coroutines.flow.Flow
