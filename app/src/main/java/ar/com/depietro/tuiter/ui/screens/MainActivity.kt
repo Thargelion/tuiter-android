@@ -94,8 +94,9 @@ class MainActivity : ComponentActivity() {
                         }
 
                         is UserUIState.Success -> {
+                            var userTuits = mainViewModel.getUserPosts().collectAsLazyPagingItems()
                             TuitFeed(
-                                tuitList = mainViewModel.getUserPosts().collectAsLazyPagingItems(),
+                                tuitList = userTuits,
                                 likeAction = mainViewModel::likeTuit,
                                 listState = mainViewModel.listState,
                             )

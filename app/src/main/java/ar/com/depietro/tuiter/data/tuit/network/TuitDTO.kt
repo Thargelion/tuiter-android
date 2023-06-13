@@ -15,7 +15,7 @@ data class TuitDTO(
 fun TuitDTO.asModel() = Tuit(
     id = id,
     message = message,
-    date = date
+    date = date,
 )
 
 data class TuitCreateDTO(

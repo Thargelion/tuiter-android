@@ -1,5 +1,6 @@
 package ar.com.depietro.tuiter.ui.components
 
+import android.util.MutableBoolean
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,13 +36,17 @@ data class TuitViewData(
     val message: String = "",
     val authorName: String = "",
     val avatarUrl: String = "",
-    val liked: Boolean = false,
-    val likes: Int = 0,
+    var liked: MutableState<Boolean> = mutableStateOf(false),
+    val likes: MutableState<Int> = mutableStateOf(0),
     val Date: String = "",
 )
 
 @Composable
-fun Tuit(tuitData: TuitViewData, likeAction: (id: Int) -> Unit, modifier: Modifier = Modifier) {
+fun Tuit(
+    tuitData: TuitViewData,
+    switchLikeACtion: (id: Int, liked: Boolean, tuitData: TuitViewData) -> Unit,
+    modifier: Modifier = Modifier
+) {
     // Thanks https://www.develou.com/cards-en-jetpack-compose/
     val paddingModifier = Modifier.padding(8.dp)
     Card(modifier = modifier) {
@@ -92,8 +100,13 @@ fun Tuit(tuitData: TuitViewData, likeAction: (id: Int) -> Unit, modifier: Modifi
                 }
             }
             Row {
-                IconButton(onClick = { likeAction(tuitData.id) }) {
-                    if (tuitData.liked) {
+                IconButton(
+                    onClick = {
+                        switchLikeACtion(tuitData.id, tuitData.liked.value, tuitData)
+
+                    }
+                ) {
+                    if (tuitData.liked.value) {
                         Icon(Icons.Default.Favorite, contentDescription = "Like")
                     } else {
                         Icon(Icons.Default.FavoriteBorder, contentDescription = "Like")
@@ -101,26 +114,10 @@ fun Tuit(tuitData: TuitViewData, likeAction: (id: Int) -> Unit, modifier: Modifi
                 }
                 Box(modifier = paddingModifier.align(alignment = Alignment.CenterVertically)) {
                     Text(
-                        text = tuitData.likes.toString()
+                        text = tuitData.likes.value.toString()
                     )
                 }
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun TuitPreview() {
-    Tuit(TuitViewData(
-        id = 1,
-        message = "Hola soy un mensaje escrito por un usuario y tengo un montón" +
-                " de texto para mostraraaaaaa aaaaaaaa aaaaaaaaaaaaa aaaaaa aaaaaaaaaa" +
-                "aaaaaaaaaaaaa aaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaa",
-        avatarUrl = "https://ui-avatars.com/api/?background=random&name=John+Doe",
-        authorName = "Jorge",
-        Date = "5 de Mayo de 2021",
-        liked = false,
-        likes = 0,
-    ), likeAction = { id -> println(id) })
 }

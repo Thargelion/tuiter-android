@@ -6,6 +6,6 @@ data class UserTuit(
     val message: String = "",
     val author: String = "",
     val date: String = "",
-    val liked: Boolean = false,
+    var liked: Boolean = false,
     val likes: Int = 0
 )

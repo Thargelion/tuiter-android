@@ -17,7 +17,7 @@ import ar.com.depietro.tuiter.ui.screens.asUserTuitViewModel
 @Composable
 fun TuitFeed(
     tuitList: LazyPagingItems<UserTuit>,
-    likeAction: (id: Int) -> Unit,
+    likeAction: (id: Int, liked: Boolean, tuit: TuitViewData) -> Unit,
     listState: ListState
 ) {
     LazyColumn {
@@ -25,7 +25,7 @@ fun TuitFeed(
             tuitList[index]?.let { tuit ->
                 Tuit(
                     tuitData = tuit.asUserTuitViewModel(),
-                    likeAction = likeAction,
+                    switchLikeACtion = likeAction,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)

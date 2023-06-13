@@ -8,11 +8,14 @@ import ar.com.depietro.tuiter.data.tuit.local.TuitDAO
 import ar.com.depietro.tuiter.data.tuit.local.UserTuitDAO
 import ar.com.depietro.tuiter.data.tuit.local.UserTuitEntity
 import ar.com.depietro.tuiter.data.tuit.local.asModel
+import ar.com.depietro.tuiter.data.tuit.model.Like
 import ar.com.depietro.tuiter.data.tuit.model.Tuit
 import ar.com.depietro.tuiter.data.tuit.model.UserTuit
 import ar.com.depietro.tuiter.data.tuit.network.TuitHTTP
+import ar.com.depietro.tuiter.data.tuit.network.asDTO
 import ar.com.depietro.tuiter.data.tuit.network.asModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -44,6 +47,22 @@ class TuitDefaultRepository @Inject constructor(
     ) {
         PagingUserPostSource(tuitHTTP, userId)
     }.flow
+
+    override fun addLike(like: Like): Flow<UserTuit> {
+        return flow {
+            tuitHTTP.likeTuit(like.asDTO())
+                .map { it.asModel() }
+                .collect { emit(it) }
+        }
+    }
+
+    override fun removeLike(like: Like): Flow<UserTuit> {
+        return flow {
+            tuitHTTP.dislikeTuit(like.asDTO())
+                .map { it.asModel() }
+                .collect { emit(it) }
+        }
+    }
 }
 
 fun UserTuit.asEntity() = UserTuitEntity(

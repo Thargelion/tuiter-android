@@ -1,21 +1,18 @@
 package ar.com.depietro.tuiter.ui.screens
 
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import ar.com.depietro.tuiter.core.asResult
 import ar.com.depietro.tuiter.core.Result
 import ar.com.depietro.tuiter.data.preference.PreferenceRepository
+import ar.com.depietro.tuiter.data.tuit.model.Like
 import ar.com.depietro.tuiter.data.tuit.model.UserTuit
-import ar.com.depietro.tuiter.data.tuit.repository.PagingUserPostSource
 import ar.com.depietro.tuiter.data.tuit.repository.TuitRepository
 import ar.com.depietro.tuiter.data.user.repository.UserRepository
 import ar.com.depietro.tuiter.data.user.model.User
@@ -24,7 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -59,9 +56,10 @@ class MainViewModel @Inject constructor(
         MainViewUIState(_userState.value)
     )
     val uiState = _uiState.asStateFlow()
-    val listState by mutableStateOf(ListState.IDLE)
-    fun getUserPosts(): Flow<PagingData<UserTuit>> =
-        tuitRepository.getPagedUserTuits(preferenceRepository.getUserId()).cachedIn(viewModelScope)
+    var listState by mutableStateOf(ListState.IDLE)
+
+    private val userPosts = tuitRepository.getPagedUserTuits(preferenceRepository.getUserId())
+    fun getUserPosts(): Flow<PagingData<UserTuit>> = userPosts.cachedIn(viewModelScope)
 
     init {
         if (preferenceRepository.getUserName() != "" && preferenceRepository.getUserId() != -1) {
@@ -110,8 +108,33 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun likeTuit(id: Int) {
-        TODO("Not yet implemented")
+    fun likeTuit(id: Int, liked: Boolean, tuit: TuitViewData) {
+        viewModelScope.launch {
+            if (liked) {
+                tuitRepository.removeLike(
+                    Like(
+                        userId = preferenceRepository.getUserId(),
+                        tuitId = id
+                    )
+                )
+                    .catch {
+                        listState = ListState.ERROR
+                    }
+                    .collect {
+                        tuit.likes.value = it.likes
+                        tuit.liked.value = !tuit.liked.value
+                    }
+            } else {
+                tuitRepository.addLike(Like(userId = preferenceRepository.getUserId(), tuitId = id))
+                    .catch {
+                        listState = ListState.ERROR
+                    }
+                    .collect {
+                        tuit.likes.value = it.likes
+                        tuit.liked.value = !tuit.liked.value
+                    }
+            }
+        }
     }
 }
 
@@ -121,7 +144,7 @@ fun UserTuit.asUserTuitViewModel(): TuitViewData {
         authorName = author,
         message = message,
         avatarUrl = avatarUrl,
-        liked = liked,
-        likes = likes,
+        liked = mutableStateOf(liked),
+        likes = mutableStateOf(likes),
     )
 }
